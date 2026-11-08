@@ -1,0 +1,15 @@
+apiVersion: security.velin.dev/v1alpha1
+kind: ImageScan
+metadata:
+  labels:
+    app.kubernetes.io/name: velin-todorov
+    app.kubernetes.io/managed-by: kustomize
+  name: imagescan-sample
+spec:
+  namespaceSelector:
+    matchLabels:
+      suite: trivy-op-test
+  podSelector:
+    matchLabels:
+      suite: trivy-op-test
+  minimalSeverity: MEDIUM

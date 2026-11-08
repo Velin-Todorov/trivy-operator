@@ -1,0 +1,5 @@
+## Append samples of your project ##
+resources:
+- security_v1alpha1_imagescan.yaml
+- security_v1alpha1_imagescan_multilabel.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

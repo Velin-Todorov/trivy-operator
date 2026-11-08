@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-server
+  namespace: system # placeholder to be overwitten by kustomize
+  labels:
+    app: trivy-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trivy-server
+  template:
+    metadata:
+      labels:
+        app: trivy-server
+    spec:
+      containers:
+        - name: trivy-server
+          image: aquasec/trivy:latest
+          args: ["server", "--listen", "0.0.0.0:8080"]
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-server
+  namespace: system # placeholder to be overwitten by kustomize
+spec:
+  selector:
+    app: trivy-server
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

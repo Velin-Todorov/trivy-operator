@@ -1,0 +1,20 @@
+# Intentionally invalid ImageScan — demonstrates the validating webhook
+# rejecting a CR whose selectors don't match any cluster state.
+apiVersion: security.velin.dev/v1alpha1
+kind: ImageScan
+metadata:
+  labels:
+    app.kubernetes.io/name: velin-todorov
+    app.kubernetes.io/managed-by: kustomize
+  name: imagescan-invalid
+spec:
+  namespaceSelector:
+    matchLabels:
+      demo: multilabel
+      team: payments
+      env: qa
+  podSelector:
+    matchLabels:
+      demo: multilabel
+      role: ghost
+  minimalSeverity: HIGH

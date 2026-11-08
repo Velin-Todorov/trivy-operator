@@ -1,0 +1,27 @@
+apiVersion: security.velin.dev/v1alpha1
+kind: ImageScan
+metadata:
+  labels:
+    app.kubernetes.io/name: velin-todorov
+    app.kubernetes.io/managed-by: kustomize
+  name: imagescan-multilabel
+spec:
+  # Targets namespaces seeded by setup_multilabel_demo.sh.
+  # matchLabels AND matchExpressions are AND-ed together, so this picks
+  # only the payments namespaces in prod or staging — skips identity-prod-eu
+  # (wrong team) and any non-payments namespace.
+  namespaceSelector:
+    matchLabels:
+      demo: multilabel
+      team: payments
+    matchExpressions:
+    - key: env
+      operator: In
+      values: ["prod", "staging"]
+  # Within those namespaces, only scan public-facing frontends.
+  podSelector:
+    matchLabels:
+      demo: multilabel
+      role: frontend
+      exposure: public
+  minimalSeverity: HIGH
